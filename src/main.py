@@ -14,4 +14,14 @@ metadata = db.MetaData()
 table_name = 'test'
 table = db.Table(table_name, metadata, autoload=True, autoload_with=engine)
 
-print(table.columns.keys())
+print(f'table columns - {table.columns.keys()}\n')
+
+# select * from table
+query = db.select([table])
+print(f'query: {query}\n')
+
+# execute query
+result_proxy = connection.execute(query)
+result_set = result_proxy.fetchall()
+
+print(result_set)
