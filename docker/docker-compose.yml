@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  # python backend service
+  python_backend:
+    # docker build
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    # docker run -i
+    stdin_open: true
+    # docker run -t
+    tty: true
+    # build from the Dockerfile in current directory
+    build: .
+    # mount the project directory (./) on the host to /usr/app inside the container
+    volumes:
+      - ../../PYTHON_DB:/usr/app
+    # set environment variables
+    environment:
+      # set encoding C.UTF-8
+      LC_ALL: C.UTF-8
+  # maria db service
+  db:
+    image: mariadb
+    restart: always
+    ports:
+      - 3306:3306
+    # mount database data storage
+    volumes:
+      - ../db/data:/var/lib/mysql
+    # environment variables
+    env_file: ../db/.env
+    environment:
+      TZ: Asia/Seoul
