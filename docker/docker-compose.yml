@@ -19,6 +19,8 @@ services:
     environment:
       # set encoding C.UTF-8
       LC_ALL: C.UTF-8
+    depends_on:
+      - db
   # maria db service
   db:
     image: mariadb
