@@ -1,22 +1,17 @@
-import pymysql
+import sqlalchemy as db
 
-connection = None
-cursor = None
-query = ""
+name = 'init'
+password = 'init123!!'
+url = 'db' # database service name in docker-compose
+port = '3306'
+database = 'project'
+conn = f'mysql+pymysql://{name}:{password}@{url}:{port}/{database}'
 
-# docker-compose로 database container를 실행 시에 host url로 localhost를 주는 것이 아닌 해당 database service의 이름을 주어야 한다.
-# 이 예제에서는 db를 이름으로 사용한다.
-connection = pymysql.connect(host='db', port=3306, user='init', password='init123!!', db='project', charset='utf8')
-cursor = connection.cursor()
+engine = db.create_engine(conn)
+connection = engine.connect()
+metadata = db.MetaData()
 
-sql = """
-        CREATE TABLE IF NOT EXISTS
-            test (
-                id      char(4),
-                name    char(10)
-            )
-    """
+table_name = 'test'
+table = db.Table(table_name, metadata, autoload=True, autoload_with=engine)
 
-cursor.execute(sql)
-connection.commit()
-connection.close()
+print(table.columns.keys())
